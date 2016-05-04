@@ -11,21 +11,29 @@ import UIKit
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     
     
-    
+// Buttons to select image
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     @IBOutlet weak var photoLibraryButton: UIBarButtonItem!
+
+// Meme TextFields
     @IBOutlet weak var topText: UITextField!
     @IBOutlet weak var bottomText: UITextField!
+
+// Toolbar and Navbar with shar and cancel buttons
     @IBOutlet weak var imageToolbar: UIToolbar!
     @IBOutlet weak var shareNavBar: UINavigationBar!
     @IBOutlet weak var shareButton: UIBarButtonItem!
     @IBOutlet weak var cancelButton: UIBarButtonItem!
+    
+// Image views
     @IBOutlet weak var imagePickerView: UIImageView!
     @IBOutlet weak var introMeme: UIImageView!
+    
+// Prompt to create meme
     @IBOutlet weak var selectImagePrompt: UILabel!
    
    
-    
+// Sets attributes for text fields
     var memeTextAttributes = [
         NSStrokeColorAttributeName : UIColor.blackColor(),
         NSForegroundColorAttributeName : UIColor.whiteColor(),
@@ -33,7 +41,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         NSStrokeWidthAttributeName : -3.0
     ]
     
-// Gives sets up initial text in textfields
+// Sets up textfields
     func textSetup (){
         topText.defaultTextAttributes = memeTextAttributes
         bottomText.defaultTextAttributes = memeTextAttributes
@@ -68,7 +76,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         view.backgroundColor = UIColor.blackColor()
         
     }
-    
+// Disables camera button, share button, and cancel button.  Also hides prompt to create meme
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         subscribeToKeyboardNotifications()
@@ -80,8 +88,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         introMeme.hidden = imagePickerView.image != nil
         
     }
-    
-    
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
@@ -95,7 +101,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:"    , name: UIKeyboardWillHideNotification, object: nil)
     }
 
-// unsubcribes from keyboard notifications
+// Unsubcribes from keyboard notifications
     func unsubscribeFromKeyboardNotifications() {
         NSNotificationCenter.defaultCenter().removeObserver(self, name:
             UIKeyboardWillShowNotification, object: nil)
@@ -117,7 +123,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
-// Gets keyboard height for showing and hiding it without blocking bottom textfield
+// Gets keyboard height for showing and hiding it without blocking textfield
     func getKeyboardHeight(notification: NSNotification) -> CGFloat {
         let userInfo = notification.userInfo
         let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
@@ -139,6 +145,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return true
     }
     
+// Allows image view to display images from UIImagePickerController
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
@@ -147,7 +154,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
 
-// Allows user to choose imag from album
+// Allows user to choose image from album
     @IBAction func pickAnImage(sender: AnyObject) {
         
         let imagePicker = UIImagePickerController()
@@ -157,7 +164,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     
-// Allows user to choose image from camera
+// Allows user to choose image using camera
     @IBAction func pickImageFromCamera(sender: AnyObject) {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
@@ -167,7 +174,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     
     
-// Allows user to choose font
+// Allows user to choose font type
     @IBAction func choooseFontType (sender: AnyObject){
         
         func changeFontName (fontNameChosen: String) {
@@ -228,7 +235,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         presentViewController(alertController, animated: true, completion: nil)
     }
     
-// Saves Meme object
+// Saves Meme
     func save(newMemedImage : UIImage) {
 
         _ = Meme( memeTopText: topText.text!, memeBottomText: bottomText.text!, image: imagePickerView.image, memedImage: newMemedImage)
@@ -269,7 +276,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
     }
     
-// Returns user to home screen
+// Allows user to start over
     @IBAction func cancelMeme(sender: UIBarButtonItem) {
         
         topText.text = "TOP"
