@@ -76,6 +76,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         view.backgroundColor = UIColor.blackColor()
         
     }
+    
 // Disables camera button, share button, and cancel button.  Also hides prompt to create meme
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -240,7 +241,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
         _ = Meme( memeTopText: topText.text!, memeBottomText: bottomText.text!, image: imagePickerView.image, memedImage: newMemedImage)
     }
-        
 
 // Creates a UIImage that combines the Image View and the Textfields
     func generateMemedImage() -> UIImage {
