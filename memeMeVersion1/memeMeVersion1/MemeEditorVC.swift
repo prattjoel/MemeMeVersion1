@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  imagePickerPractice
+//  memeMeVersion1
 //
 //  Created by Joel on 4/9/16.
 //  Copyright © 2016 Joel. All rights reserved.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class MemeEditorVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     
     
 // Buttons to select image
@@ -41,23 +41,37 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         NSStrokeWidthAttributeName : -3.0
     ]
     
+    func prepareTextField (textField: UITextField, defaultText: String){
+        super.viewDidLoad()
+
+        textField.delegate = self
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.text = defaultText
+        textField.autocapitalizationType = .AllCharacters
+        textField.textAlignment = .Center
+        
+    }
+    
+    
 // Sets up textfields
     func textSetup (){
-        topText.defaultTextAttributes = memeTextAttributes
-        bottomText.defaultTextAttributes = memeTextAttributes
-        
-        if topText.text == ""{
-            topText.text = "TOP"
-        }
-        if bottomText.text == ""{
-        bottomText.text = "BOTTOM"
-        }
-        
-        topText.textAlignment = .Center
-        bottomText.textAlignment = .Center
-        
-        self.topText.delegate = self
-        self.bottomText.delegate = self
+        prepareTextField(topText, defaultText: "TOP")
+        prepareTextField(bottomText, defaultText: "BOTTOM")
+//        topText.defaultTextAttributes = memeTextAttributes
+//        bottomText.defaultTextAttributes = memeTextAttributes
+//        
+//        if topText.text == ""{
+//            topText.text = "TOP"
+//        }
+//        if bottomText.text == ""{
+//        bottomText.text = "BOTTOM"
+//        }
+//        
+//        topText.textAlignment = .Center
+//        bottomText.textAlignment = .Center
+//        
+//        self.topText.delegate = self
+//        self.bottomText.delegate = self
     }
     
 // Clears textfields when user begins editing
@@ -98,8 +112,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
 // Subribes to keyboard notifications
     func subscribeToKeyboardNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:"    , name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:"    , name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:" , name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
     }
 
 // Unsubcribes from keyboard notifications
@@ -112,15 +126,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
 // Shows keyboard
     func keyboardWillShow(notification: NSNotification) {
-        if self.bottomText.isFirstResponder(){
-            view.frame.origin.y -= getKeyboardHeight(notification)
+        if bottomText.isFirstResponder(){
+            view.frame.origin.y = -getKeyboardHeight(notification)
         }
     }
     
 // Hides keyboard
     func keyboardWillHide (notification: NSNotification){
-        if self.bottomText.isFirstResponder(){
-            view.frame.origin.y += getKeyboardHeight(notification)
+        if bottomText.isFirstResponder(){
+            view.frame.origin.y = 0
         }
     }
     
@@ -151,7 +165,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imagePickerView.image = image
-            self.dismissViewControllerAnimated(true, completion: nil)
+            dismissViewControllerAnimated(true, completion: nil)
         }
     }
 
@@ -179,9 +193,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBAction func choooseFontType (sender: AnyObject){
         
         func changeFontName (fontNameChosen: String) {
+            
             let fontType: String = fontNameChosen
-            self.memeTextAttributes[NSFontAttributeName] = UIFont(name: fontType, size: 40)!
-            self.textSetup()
+            memeTextAttributes[NSFontAttributeName] = UIFont(name: fontType, size: 40)!
+            textSetup()
         }
         
         let alertController = UIAlertController(title: "Pick Your Meme Font", message: "", preferredStyle: .ActionSheet)
@@ -248,8 +263,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imageToolbar.hidden = true
         shareNavBar.hidden = true
         
-        UIGraphicsBeginImageContext(self.view.frame.size)
-        self.view.drawViewHierarchyInRect(self.view.frame, afterScreenUpdates: true)
+        UIGraphicsBeginImageContext(view.frame.size)
+        self.view.drawViewHierarchyInRect(view.frame, afterScreenUpdates: true)
         let memedImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
